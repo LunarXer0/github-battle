@@ -9,11 +9,11 @@ function SelectLanguage(props) {
       {languages.map(function(lang) {
         return (
           <li
-            key={lang}
-            onClick={props.onSelect.bind(null, lang)}
             style={
               lang === props.selectedLanguage ? { color: "#d0021b" } : null
             }
+            onClick={props.onSelect.bind(null, lang)}
+            key={lang}
           >
             {lang}
           </li>
@@ -22,11 +22,6 @@ function SelectLanguage(props) {
     </ul>
   );
 }
-
-SelectLanguage.propTypes = {
-  selectedLanguage: PropTypes.string.isRequired,
-  onSelect: PropTypes.func.isRequired
-};
 
 function RepoGrid(props) {
   return (
@@ -60,20 +55,24 @@ RepoGrid.propTypes = {
   repos: PropTypes.array.isRequired
 };
 
+SelectLanguage.propTypes = {
+  selectedLanguage: PropTypes.string.isRequired,
+  onSelect: PropTypes.func.isRequired
+};
+
 class Popular extends React.Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
       selectedLanguage: "All",
       repos: null
     };
+
     this.updateLanguage = this.updateLanguage.bind(this);
   }
-
   componentDidMount() {
     this.updateLanguage(this.state.selectedLanguage);
   }
-
   updateLanguage(lang) {
     this.setState(function() {
       return {
@@ -81,6 +80,7 @@ class Popular extends React.Component {
         repos: null
       };
     });
+
     api.fetchPopularRepos(lang).then(
       function(repos) {
         this.setState(function() {
@@ -91,7 +91,6 @@ class Popular extends React.Component {
       }.bind(this)
     );
   }
-
   render() {
     return (
       <div>
@@ -100,7 +99,7 @@ class Popular extends React.Component {
           onSelect={this.updateLanguage}
         />
         {!this.state.repos ? (
-          <p>Loading</p>
+          <p>LOADING!</p>
         ) : (
           <RepoGrid repos={this.state.repos} />
         )}
